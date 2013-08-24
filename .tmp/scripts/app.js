@@ -2,7 +2,8 @@
   define(function() {
     var play;
     play = function() {
-      var $c, dpr, engine;
+      var $c, dpr, engine, imageNames;
+      imageNames = ['Aquatic_Basic', 'Avian_Basic'];
       $c = $('#game');
       dpr = window.devicePixelRatio || 1;
       engine = new Joy.Engine({
@@ -11,7 +12,15 @@
         canvas: document.getElementById("game")
       });
       return engine.createScene(function(scene) {
-        var spriteBig, spriteNormal, spriteSmall, spriteUrl;
+        var i, images, name, spriteBig, spriteNormal, spriteSmall, spriteUrl, _i, _len;
+        images = {};
+        for (_i = 0, _len = imageNames.length; _i < _len; _i++) {
+          name = imageNames[_i];
+          i = new Image();
+          images[name] = i;
+          scene.loader.add(i);
+          i.src = "/images/" + name + ".png";
+        }
         Joy.Behaviour.define("BouncyBehaviour", {
           UPDATE: function() {
             this.position.x += this.speed * this.hDir * Joy.deltaTime;
@@ -36,7 +45,7 @@
         spriteSmall = new Joy.Sprite({
           x: 10,
           y: 10,
-          src: spriteUrl
+          src: "/images/Aquatic_Basic.png"
         }).behave("BouncyBehaviour");
         spriteSmall.hDir = 1;
         spriteSmall.vDir = 1;
@@ -45,15 +54,16 @@
         spriteNormal = new Joy.Sprite({
           x: 10,
           y: 10,
-          src: spriteUrl
-        }).behave("BouncyBehaviour");
-        spriteNormal.hDir = -1;
-        spriteNormal.vDir = 1;
-        spriteNormal.speed = 1;
+          src: "/images/Avian_Basic.png"
+        }).behave("BouncyBehaviour").bind('load', function() {
+          spriteNormal.hDir = -1;
+          spriteNormal.vDir = 1;
+          return spriteNormal.speed = 1;
+        });
         spriteBig = new Joy.Sprite({
           x: 10,
           y: 10,
-          src: spriteUrl
+          src: "/images/Avian_Basic.png"
         }).behave("BouncyBehaviour");
         spriteBig.hDir = 1;
         spriteBig.vDir = -1;

@@ -1,6 +1,11 @@
 define ->
   play = ->
 
+    imageNames = [
+      'Aquatic_Basic',
+      'Avian_Basic',
+    ]
+
     $c = $('#game')
     dpr = window.devicePixelRatio or 1
     engine = new Joy.Engine
@@ -9,6 +14,13 @@ define ->
       canvas: document.getElementById("game")
 
     engine.createScene (scene) ->
+      images = {}
+      for name in imageNames
+        i = new Image()
+        images[name] = i
+        scene.loader.add(i)
+        i.src = "/images/#{name}.png"
+
       Joy.Behaviour.define "BouncyBehaviour",
         UPDATE: ->
           @position.x += @speed * @hDir * Joy.deltaTime
@@ -25,7 +37,7 @@ define ->
       spriteSmall = new Joy.Sprite(
         x: 10
         y: 10
-        src: spriteUrl
+        src: "/images/Aquatic_Basic.png"
       ).behave("BouncyBehaviour")
       spriteSmall.hDir = 1
       spriteSmall.vDir = 1
@@ -35,16 +47,16 @@ define ->
       spriteNormal = new Joy.Sprite(
         x: 10
         y: 10
-        src: spriteUrl
-      ).behave("BouncyBehaviour")
-      spriteNormal.hDir = -1
-      spriteNormal.vDir = 1
-      spriteNormal.speed = 1
+        src: "/images/Avian_Basic.png"
+      ).behave("BouncyBehaviour").bind 'load', ->
+        spriteNormal.hDir = -1
+        spriteNormal.vDir = 1
+        spriteNormal.speed = 1
 
       spriteBig = new Joy.Sprite(
         x: 10
         y: 10
-        src: spriteUrl
+        src: "/images/Avian_Basic.png"
       ).behave("BouncyBehaviour")
       spriteBig.hDir = 1
       spriteBig.vDir = -1
