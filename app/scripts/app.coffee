@@ -2,82 +2,64 @@ define ['jquery', 'quintus'], ($, Quintus) ->
   play = ->
 
     imageNames = [
-      'Aquatic_Basic',
+      'background',
+      'Aquatic_Carnivorous',
       'Avian_Basic',
     ]
+    assetUrl = (a) ->
+      "/images/#{a}.png"
 
     $c = $('#game')
     c = $c.get(0)
     dpr = window.devicePixelRatio or 1
-    c.width = $c.width() * dpr
-    c.height = $c.height() * dpr
+    ow = $c.width()
+    oh = $c.height()
+    c.width = ow * dpr
+    c.height = oh * dpr
 
-    Q = Quintus().include("Sprites, Scenes, 2D, Input").setup("game")
-
-    drawLines = (ctx) ->
-      ctx.save()
-      ctx.strokeStyle = '#FFFFFF'
-      for x in [0..1000] by 100
-        ctx.beginPath()
-        ctx.moveTo(x,0)
-        ctx.lineTo(x,600)
-        ctx.stroke()
-      ctx.restore();
+    Q = Quintus().include("Sprites, Scenes, 2D, Input").setup "game",
+      width: c.width
+      height: c.width
+    $("#game_container, #game").css
+      width: ow
+      height: oh
+    Q.ctx.scale(window.devicePixelRatio, dpr); 
 
       # Create a simple scene that adds two shapes on the page
     Q.scene "start", (stage) ->
+      bg = new Q.Sprite
+        x: 0
+        y: 0
+        z: -1
+        cx: 0
+        cy: 0
+        asset: "/images/background.png"
+        scale: 0.5
+      bg.p.points = [
+        [0, 0], [bg.p.w, 0], [bg.p.w, bg.p.h], [0, bg.p.h]
+      ]
+      stage.insert(bg)
 
-      # A basic sprite shape a asset as the image
-      sprite1 = new Q.Sprite({
-        x: 500, y: 100, asset: '/images/Avian_Basic.png',
-        angle: 0, collisionMask: 1, scale: 1});
-      sprite1.p.points = [
-        [ -150, -120 ],
-        [  150, -120 ],
-        [  150,   60 ],
-        [   90,  120 ],
-        [  -90,  120 ],
-        [ -150,   60 ]
-        ];
-      stage.insert(sprite1);
-      # Add the 2D component for collision detection and gravity.
-      sprite1.add('2d')
-
-      sprite1.on 'step', ->
-
-      # A red platform for the other sprite to land on
-      sprite2 = new Q.Sprite({ x: 500, y: 600, w: 300, h: 200 });
-      sprite2.draw = (ctx) ->
-        ctx.fillStyle = '#FF0000';
-        ctx.fillRect(-this.p.cx,-this.p.cy,this.p.w,this.p.h);
-
-      stage.insert(sprite2);
-
-      # Bind the basic inputs to different behaviors of sprite1
-      Q.input.on 'up', stage, (e) ->
-        sprite1.p.scale -= 0.1;
-
-      Q.input.on 'down', stage, (e) ->
-        sprite1.p.scale += 0.1;
-
-      Q.input.on 'left', stage, (e) ->
-        sprite1.p.angle -= 5;
-
-      Q.input.on 'right', stage, (e) ->
-        sprite1.p.angle += 5;
-
-      Q.input.on 'fire', stage, (e) ->
-        sprite1.p.vy = -600;
-
-      Q.input.on 'action', stage, (e) ->
-        sprite1.p.x = 500;
-        sprite1.p.y = 100;
-
+      insertOreo = ->
+        creature = new Q.Sprite
+          x: -300 * 0.3
+          y: 500
+          z: 2
+          scale: 0.3
+          asset: assetUrl("Aquatic_Carnivorous")
+        stage.insert(creature)
+        creature.on 'step', (dt) ->
+          creature.p.x += dt * 80
+        end = ->
+          stage.remove(creature)
+        setTimeout(end, 10000)
+      setInterval(insertOreo, 5000)
+      insertOreo()
 
       # Draw some lines after each frame
-      stage.on('postrender',drawLines);
+      stage.on('postrender', ->);
 
-    Q.load '/images/Avian_Basic.png', ->
+    Q.load (assetUrl(name) for name in imageNames), ->
 
       # Start the show
       Q.stageScene("start");
