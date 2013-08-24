@@ -1,20 +1,17 @@
 require.config({
     paths: {
         jquery: '../bower_components/jquery/jquery',
-        joy: 'joy',
-        howler: 'howler',
-        TWEEN: 'tween'
+        quintus: 'quintus-all',
+        howler: 'howler'
     },
     shim: {
-        joy: {
-            deps: ['TWEEN', 'howler'],
-            exports: 'Joy'
+        quintus: {
+            exports: 'Quintus'
         }
     }
 });
 
-require(['app', 'jquery', 'Howler', 'joy'], function (app, $, Howler, J) {
+require(['app'], function (app) {
     'use strict';
-    J.Sound = Howler.Howl;
     app.play();
 });
