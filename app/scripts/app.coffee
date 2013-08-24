@@ -40,10 +40,34 @@ define ['jquery', 'quintus'], ($, Quintus) ->
       cy: 0
       asset: "/images/conveyorbelt.png"
       scale: 0.5
-    conveyor.p.points = [[0, 0], [bg.p.w, 0], [bg.p.w, bg.p.h], [0, bg.p.h]]
+    conveyor.p.points = [
+      [0, 0], [conveyor.p.w, 0],
+      [conveyor.p.w, conveyor.p.h], [0, conveyor.p.h]]
     stage.insert(conveyor)
 
-  addSyringe = (stage, label) ->
+  addSyringe = (stage, label, x) ->
+    base = new Q.Sprite
+      x: x
+      y: 100
+      w: 100
+      h: 50
+      cx: 0
+      cy: 0
+    base.p.points = [
+      [0, 0], [base.p.w, 0],
+      [base.p.w, base.p.h], [0, base.p.h]]
+    base.draw = (ctx) ->
+      ctx.fillStyle = "white";
+      ctx.strokeStyle = "black";
+      ctx.fillRect(-@p.cx, -@p.cy, @p.w, @p.h);
+
+      ctx.font = "14px Helvetica"
+      ctx.fillStyle = "black"
+      ctx.textAlign = 'center'
+      ctx.textBaseline = 'bottom'
+      ctx.fillText(label, -@p.cx + @p.w / 2, -@p.cy + @p.h - 3)
+      
+    stage.insert(base)
 
   addOreo = (stage, asset) ->
     creature = new Q.Sprite
@@ -81,8 +105,8 @@ define ['jquery', 'quintus'], ($, Quintus) ->
     Q.scene "start", (stage) ->
       addBackground(stage)
 
-      addSyringe(stage, 'Avian')
-      addSyringe(stage, 'Aquatic')
+      addSyringe(stage, 'Avian', 50)
+      addSyringe(stage, 'Aquatic', 200)
 
       setInterval((-> addOreo(stage, 'blob2')), 5000)
       addOreo(stage, 'blob1')
