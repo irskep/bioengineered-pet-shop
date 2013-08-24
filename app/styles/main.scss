@@ -1,0 +1,17 @@
+$gameWidth: 768px;
+$gameHeight: 576px;
+
+@import "compass/reset";
+
+.container {
+  margin: auto;
+  width: $gameWidth;
+  background-color: black;
+  color: white;
+}
+
+canvas#game {
+  background-color: blue;
+  width: $gameWidth;
+  height: $gameHeight;
+}

@@ -1,0 +1,1 @@
+define ->  "I am all of hello"
