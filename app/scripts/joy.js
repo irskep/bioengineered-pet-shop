@@ -3966,7 +3966,7 @@
    *
    * @class Sound
    */
-  J.Sound = null;
+  // J.Sound = Howl;
 })(Joy);
 
 
@@ -5518,7 +5518,7 @@
   });
 
   // Bind document key down
-  document.onkeydown = function(e) {
+  J.onkeydown = function(e) {
    var key = (e || window.event).keyCode;
     if (!Keyboard.timers[key]) {
       triggerKeyEvent(J.Events.KEY_DOWN, e);
@@ -5530,11 +5530,11 @@
         }, Keyboard.repeatRate);
       }
     }
-    return false;
+    return true;
   };
 
   // Bind document key up
-  document.onkeyup = function(e) {
+  J.onkeyup = function(e) {
     var key = (e || window.event).keyCode;
     if (key in Keyboard.timers) {
       triggerKeyEvent(J.Events.KEY_UP, e);

@@ -16,6 +16,5 @@ require.config({
 require(['app', 'jquery', 'Howler', 'joy'], function (app, $, Howler, J) {
     'use strict';
     J.Sound = Howler.Howl;
-    console.log(app);
-    console.log('Running jQuery %s', $().jquery);
+    app.play();
 });
